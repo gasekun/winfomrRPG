@@ -1,4 +1,5 @@
-﻿namespace rpg_from_java_by_Gase
+﻿using System;
+namespace rpg_from_java_by_Gase
 {
     public class Hero
     {
@@ -9,40 +10,38 @@
         public int y = 0;
         public int room = 0;
         public bool key = false;
-        public bool win()
-        {
-            if (x == 0 && y == 8)
-            {
-                return true;
-            }
-            return false;
-        }
     }
     public class Test
     {
         public bool walk_up(int x, int y, char[,] room)
         {
-            if (room[x - 1, y] == '-' || room[x - 1, y] == '|' || room[x - 1, y] == 'С')
+            if (x - 1 < 0)
+                return false;
+            if (room[x - 1, y] == '-' || room[x - 1, y] == '|' || room[x - 1, y] == 'С' || room[x - 1, y] == '+')
                 return false;
             return true;
         }
         public bool walk_down(int x, int y, char[,] room)
         {
-            if (room[x + 1, y] == '-' || room[x + 1, y] == '|' || room[x + 1, y] == 'С')
+            if (x + 1 > Math.Sqrt(room.Length) || x == Math.Sqrt(room.Length))
+                return false;
+            if (room[x + 1, y] == '-' || room[x + 1, y] == '|' || room[x + 1, y] == 'С' || room[x + 1, y] == '+')
                 return false;
             return true;
         }
         public bool walk_right(int x, int y, char[,] room)
         {
-            if (room[x, y + 1] == '-' || room[x, y + 1] == '|' || room[x, y + 1] == 'С')
+            if (y + 1 > Math.Sqrt(room.Length) || y == Math.Sqrt(room.Length))
+                return false;
+            if (room[x, y + 1] == '-' || room[x, y + 1] == '|' || room[x, y + 1] == 'С' || room[x, y + 1] == '+')
                 return false;
             return true;
         }
         public bool walk_left(int x, int y, char[,] room)
         {
-            if (y == 0)
+            if (y - 1 < 0)
                 return false;
-            if (room[x, y - 1] == '-' || room[x, y - 1] == '|' || room[x, y - 1] == 'С')
+            if (room[x, y - 1] == '-' || room[x, y - 1] == '|' || room[x, y - 1] == 'С' || room[x, y - 1] == '+')
                 return false;
             return true;
         }

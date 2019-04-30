@@ -35,7 +35,7 @@ namespace winform_clear_project
         int type_monstr = 0;
         bool in_fight = false;
         bool play = false;
-        int k = 0, buf_x = 0, buf_y = 0;//разрушение стены
+        int buf_x = 0, buf_y = 0;//разрушение стены
         static Stream game_over_sound = Resources.game_over;
         static Stream music_fight_sound = Resources.music_fight;
         static Stream music_walk_sound = Resources.background_music;
@@ -75,98 +75,114 @@ namespace winform_clear_project
                     switch (e.KeyCode)
                     {
                         case Keys.W:
-                            if (tester.event_up(obj_hero.x, obj_hero.y, room))
+                            if (tester.walk_up(obj_hero.x, obj_hero.y, room))
                             {
-                                switch (room[obj_hero.x - 1, obj_hero.y])
+                                if (tester.event_up(obj_hero.x, obj_hero.y, room))
                                 {
-                                    case 'М':
-                                        start_fight_goblin();
-                                        break;
-                                    case 'З':
-                                        obj_hero.pointions += 1;
-                                        break;
-                                    case 'Б':
-                                        start_fighr_boss();
-                                        break;
-                                    case 'Л':
-                                        go_another_room();
-                                        goto draw_metka;
-                                    case 'с':
-                                        open_chest();
-                                        goto draw_metka;
-                                    case 'В':
-                                        win();
-                                        return;
+                                    switch (room[obj_hero.x - 1, obj_hero.y])
+                                    {
+                                        case 'М':
+                                            start_fight_goblin();
+                                            break;
+                                        case 'З':
+                                            obj_hero.pointions += 1;
+                                            break;
+                                        case 'Б':
+                                            start_fighr_boss();
+                                            break;
+                                        case 'Л':
+                                            go_another_room();
+                                            goto draw_metka;
+                                        case 'с':
+                                            open_chest();
+                                            goto draw_metka;
+                                        case 'В':
+                                            win();
+                                            return;
+                                    }
                                 }
+                                obj_hero.x -= 1;
                             }
-                            if (tester.walk_up(obj_hero.x, obj_hero.y, room)) obj_hero.x -= 1; break;
+                            break;
                         case Keys.A:
-                            if (tester.event_left(obj_hero.x, obj_hero.y, room))
+                            if (tester.walk_left(obj_hero.x, obj_hero.y, room))
                             {
-                                switch (room[obj_hero.x, obj_hero.y - 1])
+                                if (tester.event_left(obj_hero.x, obj_hero.y, room))
                                 {
-                                    case 'М':
-                                        start_fight_goblin();
-                                        break;
-                                    case 'З':
-                                        obj_hero.pointions += 1;
-                                        break;
-                                    case 'Б':
-                                        start_fighr_boss();
-                                        break;
-                                    case 'Л':
-                                        go_another_room();
-                                        goto draw_metka;
-                                    case 'с':
-                                        open_chest();
-                                        goto draw_metka;
+                                    switch (room[obj_hero.x, obj_hero.y - 1])
+                                    {
+                                        case 'М':
+                                            start_fight_goblin();
+                                            break;
+                                        case 'З':
+                                            obj_hero.pointions += 1;
+                                            break;
+                                        case 'Б':
+                                            start_fighr_boss();
+                                            break;
+                                        case 'Л':
+                                            go_another_room();
+                                            goto draw_metka;
+                                        case 'с':
+                                            open_chest();
+                                            goto draw_metka;
+                                    }
                                 }
+                                obj_hero.y -= 1;
                             }
-                            if (tester.walk_left(obj_hero.x, obj_hero.y, room)) obj_hero.y -= 1; break;
+                            break;
                         case Keys.S:
-                            if (tester.event_down(obj_hero.x, obj_hero.y, room))
+                            if (tester.walk_down(obj_hero.x, obj_hero.y, room))
                             {
-                                switch (room[obj_hero.x + 1, obj_hero.y])
+                                if (tester.event_down(obj_hero.x, obj_hero.y, room))
                                 {
-                                    case 'М':
-                                        start_fight_goblin();
-                                        break;
-                                    case 'З':
-                                        obj_hero.pointions += 1;
-                                        break;
-                                    case 'Б':
-                                        start_fighr_boss();
-                                        break;
-                                    case 'Л':
-                                        go_another_room();
-                                        goto draw_metka;
-                                    case 'с':
-                                        open_chest();
-                                        goto draw_metka;
+                                    switch (room[obj_hero.x + 1, obj_hero.y])
+                                    {
+                                        case 'М':
+                                            start_fight_goblin();
+                                            break;
+                                        case 'З':
+                                            obj_hero.pointions += 1;
+                                            break;
+                                        case 'Б':
+                                            start_fighr_boss();
+                                            break;
+                                        case 'Л':
+                                            go_another_room();
+                                            goto draw_metka;
+                                        case 'с':
+                                            open_chest();
+                                            goto draw_metka;
+                                    }
                                 }
+                                obj_hero.x += 1;
                             }
-                            if (tester.walk_down(obj_hero.x, obj_hero.y, room)) obj_hero.x += 1; break;
+                            break;
                         case Keys.D:
-                            if (tester.event_right(obj_hero.x, obj_hero.y, room))
+                            if (tester.walk_right(obj_hero.x, obj_hero.y, room))
                             {
-                                switch (room[obj_hero.x, obj_hero.y + 1])
+                                if (tester.event_right(obj_hero.x, obj_hero.y, room))
                                 {
-                                    case 'М':
-                                        start_fight_goblin();
-                                        break;
-                                    case 'З':
-                                        obj_hero.pointions += 1; break;
-                                    case 'Б':
-                                        start_fighr_boss();
-                                        break;
-                                    case 'Л':
-                                        go_another_room(); goto draw_metka;
-                                    case 'с':
-                                        open_chest();
-                                        goto draw_metka;
+                                    switch (room[obj_hero.x, obj_hero.y + 1])
+                                    {
+                                        case 'М':
+                                            start_fight_goblin();
+                                            break;
+                                        case 'З':
+                                            obj_hero.pointions += 1; break;
+                                        case 'Б':
+                                            start_fighr_boss();
+                                            break;
+                                        case 'Л':
+                                            go_another_room(); goto draw_metka;
+                                        case 'с':
+                                            open_chest();
+                                            goto draw_metka;
+                                    }
                                 }
+                                obj_hero.y += 1;
                             }
-                            if (tester.walk_right(obj_hero.x, obj_hero.y, room)) obj_hero.y += 1; break;
+                            break;
                     }
                 draw_metka:
                 toolStripStatusLabel1.Text = "HP:" + obj_hero.health + ",урон:" + obj_hero.streng * 2 + ",зелий:" + obj_hero.pointions;
@@ -194,9 +210,9 @@ namespace winform_clear_project
         {
             toolStripStatusLabel1.Text = "HP:" + obj_hero.health + ",урон:" + obj_hero.streng * 2 + ",зелий:" + obj_hero.pointions;
             int x = 10, y = 10, k = 0;
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Math.Sqrt(room.Length); i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < Math.Sqrt(room.Length); j++)
                 {
                     if (room[i, j] == '+' || room[i, j] == '|' || room[i, j] == '-')
                     {
@@ -308,7 +324,7 @@ namespace winform_clear_project
                 MessageBox.Show("В трупе монстра вы находите: \"Ключ\"");
                 toolStripStatusLabel2.Image = Resources.key;
             }
-            if(!obj_hero.key && boss.HP_monster <=0)
+            if (!obj_hero.key && boss.HP_monster <= 0)
             {
                 obj_hero.key = true;
                 MessageBox.Show("В трупе АРХИТЕКТУРЩИКА вы находите: \"Ключ\"");
@@ -340,19 +356,19 @@ namespace winform_clear_project
         {
             int k = 0;
             room[obj.x, obj.y] = '*';
-            if (room[obj.x + 1, obj.y] == '*' && obj.x < 9)
+            if (room[obj.x + 1, obj.y] == '*' && obj.x < Math.Sqrt(room.Length))
                 room[obj.x + 1, obj.y] = ' ';
-            if (obj.x != 0)
-                if (room[obj.x - 1, obj.y] == '*' && obj.x > 1)
+            if (obj.x > 0)
+                if (room[obj.x - 1, obj.y] == '*' && obj.x > 0)
                     room[obj.x - 1, obj.y] = ' ';
-            if (room[obj.x, obj.y + 1] == '*' && obj.y < 9)
+            if (room[obj.x, obj.y + 1] == '*' && obj.y < Math.Sqrt(room.Length))
                 room[obj.x, obj.y + 1] = ' ';
-            if (obj.y != 0)
-                if (room[obj.x, obj.y - 1] == '*' && obj.y >= 1)
+            if (obj.y > 0)
+                if (room[obj.x, obj.y - 1] == '*' && obj.y > 0)
                     room[obj.x, obj.y - 1] = ' ';
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Math.Sqrt(room.Length); i++)
             {
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < Math.Sqrt(room.Length); j++)
                 {
                     if (room[i, j] == '+' || room[i, j] == '|' || room[i, j] == '-')
                     {
@@ -430,7 +446,7 @@ namespace winform_clear_project
                 }
         }
 
-        
+
 
         private void open_chest()
         {
@@ -490,7 +506,7 @@ namespace winform_clear_project
             music_walk.Stop();
             music_fight.Play();
         }
-        
+
         private void start_fight_goblin()
         {
             goblin.HP_monster = 10;
