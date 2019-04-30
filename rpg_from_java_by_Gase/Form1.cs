@@ -1,6 +1,7 @@
 ﻿using rpg_from_java_by_Gase;
 using rpg_from_java_by_Gase.Properties;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Media;
@@ -11,17 +12,8 @@ namespace winform_clear_project
     public partial class Form1 : Form
     {
         #region objects
-        Image wall = Resources.wall_sprite;
-        Image hero = Resources.hero_sprite;
-        Image skeleton = Resources.skeleton;
-        Image potion = Resources.potion;
-        Image door = Resources.door;
-        Image boss_sprite = Resources.boss;
-        Image wall_crash_1 = Resources.wall_crash_1;
-        Image wall_crash_2 = Resources.wall_crash_2;
-        Image wall_crash_3 = Resources.wall_crash_3;
-        Image wall_crash_4 = Resources.wall_crash_4;
-        Image wall_crash_5 = Resources.wall_crash_5;
+        List<Image> listimage_FloorWall = new List<Image>();//Колекция картинок с стенами и полом
+        List<Image> listimage_main = new List<Image>();//Колекция картинок с основними елементами
         public char[,] room = new char[10, 10];
         public char[,] buffer_room = new char[10, 10];
         Hero obj_hero;
@@ -36,13 +28,8 @@ namespace winform_clear_project
         bool in_fight = false;
         bool play = false;
         int buf_x = 0, buf_y = 0;//разрушение стены
-        static Stream game_over_sound = Resources.game_over;
-        static Stream music_fight_sound = Resources.music_fight;
-        static Stream music_walk_sound = Resources.background_music;
-        static Stream win_sound = Resources.win_sound;
-        SoundPlayer game_over = new SoundPlayer(game_over_sound);
-        SoundPlayer music_fight = new SoundPlayer(music_fight_sound);
-        SoundPlayer music_walk = new SoundPlayer(music_walk_sound);
+        SoundPlayer player1 = new SoundPlayer();
+        SoundPlayer player2 = new SoundPlayer();
         int count_play = 0;
         #endregion objects
         #region form events
@@ -57,7 +44,20 @@ namespace winform_clear_project
             tabControl1.TabPages.Remove(tabPage2);
             richTextBox1.SelectedText = "The hunt for a ARCHITECTURAL    on the dungeon";
             button6.BringToFront();
-            tabPage2.Update();
+
+            listimage_FloorWall.Add(Resources.wall_crash_1);//0
+            listimage_FloorWall.Add(Resources.wall_crash_2);//1
+            listimage_FloorWall.Add(Resources.wall_crash_3);//2
+            listimage_FloorWall.Add(Resources.wall_crash_4);//3
+            listimage_FloorWall.Add(Resources.wall_crash_5);//4
+            listimage_FloorWall.Add(Resources.floor);//5
+            listimage_main.Add(Resources.hero_sprite);//0
+            listimage_main.Add(Resources.hero_sprite_with_sword);//1
+            listimage_main.Add(Resources.wall_sprite);//2
+            listimage_main.Add(Resources.skeleton);//3
+            listimage_main.Add(Resources.boss);//4
+            listimage_main.Add(Resources.potion);//5
+            listimage_main.Add(Resources.door);//6
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -82,7 +82,7 @@ namespace winform_clear_project
                                     switch (room[obj_hero.x - 1, obj_hero.y])
                                     {
                                         case 'М':
-                                            start_fight_goblin();
+                                            start_fight_skeleton();
                                             break;
                                         case 'З':
                                             obj_hero.pointions += 1;
@@ -112,7 +112,7 @@ namespace winform_clear_project
                                     switch (room[obj_hero.x, obj_hero.y - 1])
                                     {
                                         case 'М':
-                                            start_fight_goblin();
+                                            start_fight_skeleton();
                                             break;
                                         case 'З':
                                             obj_hero.pointions += 1;
@@ -139,7 +139,7 @@ namespace winform_clear_project
                                     switch (room[obj_hero.x + 1, obj_hero.y])
                                     {
                                         case 'М':
-                                            start_fight_goblin();
+                                            start_fight_skeleton();
                                             break;
                                         case 'З':
                                             obj_hero.pointions += 1;
@@ -166,7 +166,7 @@ namespace winform_clear_project
                                     switch (room[obj_hero.x, obj_hero.y + 1])
                                     {
                                         case 'М':
-                                            start_fight_goblin();
+                                            start_fight_skeleton();
                                             break;
                                         case 'З':
                                             obj_hero.pointions += 1; break;
@@ -192,14 +192,15 @@ namespace winform_clear_project
 
         private void win()
         {
-            music_walk.Stream = win_sound;
-            music_walk.Play();
+            player1.Stream = Resources.win_sound;
+            player1.Play();
+            listimage_main[0] = Resources.hero_sprite;
             MessageBox.Show("Победа!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             tabControl1.TabPages.Remove(tabPage1);
             tabControl1.TabPages.Add(tabPage3);
             FormBorderStyle = FormBorderStyle.None;
             Width = 322;
-            Height = 235;
+            Height = 225;
             in_fight = false;
             play = false;
             room = null;
@@ -216,23 +217,23 @@ namespace winform_clear_project
                 {
                     if (room[i, j] == '+' || room[i, j] == '|' || room[i, j] == '-')
                     {
-                        blocks[k] = new Label() { Image = wall, Location = new Point(x, y), BackColor = Color.Gray, ForeColor = Color.White };
+                        blocks[k] = new Label() { Image = listimage_main[2], Location = new Point(x, y), BackColor = Color.Gray, ForeColor = Color.White };
                         blocks[k].Click += wall_crack;
                         blocks[k].Name = i.ToString() + j.ToString();
                         blocks[k].Tag = 0;
                     }
                     else if (room[i, j] == '*')
-                        blocks[k] = new Label() { Image = hero, Location = new Point(x, y) };
+                        blocks[k] = new Label() { Image = listimage_main[0], Location = new Point(x, y) };
                     else if (room[i, j] == ' ')
-                        blocks[k] = new Label() { Image = Resources.floor, Location = new Point(x, y) };
+                        blocks[k] = new Label() { Image = listimage_FloorWall[5], Location = new Point(x, y) };
                     else if (room[i, j] == 'З')
-                        blocks[k] = new Label() { Image = potion, Location = new Point(x, y) };
+                        blocks[k] = new Label() { Image = listimage_main[5], Location = new Point(x, y) };
                     else if (room[i, j] == 'М')
-                        blocks[k] = new Label() { Image = skeleton, Location = new Point(x, y) };
+                        blocks[k] = new Label() { Image = listimage_main[3], Location = new Point(x, y) };
                     else if (room[i, j] == 'Б')
-                        blocks[k] = new Label() { Image = boss_sprite, Location = new Point(x, y) };
+                        blocks[k] = new Label() { Image = listimage_main[4], Location = new Point(x, y) };
                     else if (room[i, j] == 'В')
-                        blocks[k] = new Label() { Image = door, Location = new Point(x, y) };
+                        blocks[k] = new Label() { Image = listimage_main[6], Location = new Point(x, y) };
                     else if (room[i, j] == 'Л')
                         blocks[k] = new Label() { Image = Resources.downstair, Location = new Point(x, y) };
                     else if (room[i, j] == 'с')
@@ -335,12 +336,14 @@ namespace winform_clear_project
             obj_hero.streng += 1;
             in_fight = false;
             toolStripStatusLabel1.Text = "HP:" + obj_hero.health + ",урон:" + obj_hero.streng * 2 + ",зелий:" + obj_hero.pointions;
-            music_fight.Stop();
-            music_walk.Play();
+            player1.Stream = Resources.background_music;
+            player1.Play();
         }
         private void game_end()
         {
-            game_over.Play();
+            player1.Stream = Resources.game_over;
+            player1.Play();
+            listimage_main[0] = Resources.hero_sprite;
             MessageBox.Show("GAME OVER!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             tabControl1.TabPages.Remove(tabPage2);
             tabControl1.TabPages.Add(tabPage3);
@@ -375,31 +378,31 @@ namespace winform_clear_project
                         if (obj_hero.room == 0 && blocks[k].Tag != null)
                             switch ((int)(blocks[k].Tag))
                             {
-                                case 0: blocks[k].Image = Resources.wall_sprite; break;
-                                case 1: blocks[k].Image = Resources.wall_crash_1; break;
-                                case 2: blocks[k].Image = Resources.wall_crash_2; break;
-                                case 3: blocks[k].Image = Resources.wall_crash_3; break;
-                                case 4: blocks[k].Image = Resources.wall_crash_4; break;
-                                case 5: blocks[k].Image = Resources.wall_crash_5; break;
+                                case 0: blocks[k].Image = listimage_main[2]; break;
+                                case 1: blocks[k].Image = listimage_FloorWall[0]; break;
+                                case 2: blocks[k].Image = listimage_FloorWall[1]; break;
+                                case 3: blocks[k].Image = listimage_FloorWall[2]; break;
+                                case 4: blocks[k].Image = listimage_FloorWall[3]; break;
+                                case 5: blocks[k].Image = listimage_FloorWall[4]; break;
                             }
-                        else blocks[k].Image = Resources.wall_sprite;
+                        else blocks[k].Image = listimage_main[2];
 
 
                     }
                     else if (room[i, j] == '*')
-                        blocks[k].Image = hero;
+                        blocks[k].Image = listimage_main[0];
                     else if (room[i, j] == ' ')
                     {
-                        blocks[k].Image = Resources.floor;
+                        blocks[k].Image = listimage_FloorWall[5];
                     }
                     else if (room[i, j] == 'З')
-                        blocks[k].Image = potion;
+                        blocks[k].Image = listimage_main[5];
                     else if (room[i, j] == 'М')
-                        blocks[k].Image = skeleton;
+                        blocks[k].Image = listimage_main[3];
                     else if (room[i, j] == 'Б')
-                        blocks[k].Image = boss_sprite;
+                        blocks[k].Image = listimage_main[4];
                     else if (room[i, j] == 'В')
-                        blocks[k].Image = door;
+                        blocks[k].Image = listimage_main[6];
                     else if (room[i, j] == 'Л')
                         blocks[k].Image = Resources.downstair;
                     else if (room[i, j] == 'с')
@@ -422,11 +425,11 @@ namespace winform_clear_project
                     clicking_label.Tag = (int)clicking_label.Tag + 1;
                     switch ((int)(clicking_label.Tag))
                     {
-                        case 1: clicking_label.Image = wall_crash_1; break;
-                        case 2: clicking_label.Image = wall_crash_2; break;
-                        case 3: clicking_label.Image = wall_crash_3; break;
-                        case 4: clicking_label.Image = wall_crash_4; break;
-                        case 5: clicking_label.Image = wall_crash_5; break;
+                        case 1: clicking_label.Image = listimage_FloorWall[0]; break;
+                        case 2: clicking_label.Image = listimage_FloorWall[1]; break;
+                        case 3: clicking_label.Image = listimage_FloorWall[2]; break;
+                        case 4: clicking_label.Image = listimage_FloorWall[3]; break;
+                        case 5: clicking_label.Image = listimage_FloorWall[4]; break;
                         default:
                             if (x == 1 && y == 2)
                             {
@@ -437,7 +440,7 @@ namespace winform_clear_project
                             else
                             {
                                 room[x, y] = ' ';
-                                clicking_label.Image = Resources.floor;
+                                clicking_label.Image = listimage_FloorWall[5] ;
                                 clicking_label.Click -= wall_crack;
                             }
                             break;
@@ -456,7 +459,7 @@ namespace winform_clear_project
                 obj_hero.key = false;
                 obj_hero.streng += 10;
                 room[4, 7] = 'С';
-                hero = Resources.hero_sprite_with_sword;
+                listimage_main[0] = Resources.hero_sprite_with_sword;
                 toolStripStatusLabel2.Image = null;
             }
         }
@@ -501,13 +504,14 @@ namespace winform_clear_project
             tabControl1.TabPages.Remove(tabPage1);
             tabControl1.TabPages.Add(tabPage2);
             type_monstr = 2;
-            label6.Image = boss_sprite;
+            label6.Image = Resources.boss;
             label6.Location = new Point((tabPage1.Size.Width / 2) - label6.Size.Width / 2, label6.Location.Y);
-            music_walk.Stop();
-            music_fight.Play();
+            player1.Stop();
+            player1.Stream =Resources.music_fight;
+            player1.Play();
         }
 
-        private void start_fight_goblin()
+        private void start_fight_skeleton()
         {
             goblin.HP_monster = 10;
             linkLabel4.Text = "Скелет";
@@ -517,8 +521,9 @@ namespace winform_clear_project
             tabControl1.TabPages.Add(tabPage2);
             in_fight = true;
             type_monstr = 1;
-            music_walk.Stop();
-            music_fight.Play();
+            player1.Stop();
+            player1.Stream = Resources.music_fight;
+            player1.Play();
         }
         #endregion my methods
         #region button and timer events
@@ -597,8 +602,9 @@ namespace winform_clear_project
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             tabControl1.TabPages.Remove(tabPage3);
             tabControl1.TabPages.Add(tabPage1);
-            music_walk.Stream = Resources.background_music;
-            music_walk.Play();
+            player1.Stop();
+            player1.Stream = Resources.background_music;
+            player1.Play();
         }
 
         private void button5_Click(object sender, EventArgs e)
@@ -631,7 +637,7 @@ namespace winform_clear_project
                 case 1: randButtom.Image = Resources.door_clear; break;
                 case 2: randButtom.Image = Resources.hero_clear; break;
                 case 3: randButtom.Image = Resources.skeleton_clear; break;
-                case 4: randButtom.Image = wall; break;
+                case 4: randButtom.Image = Resources.wall_sprite; break;
                 case 5: randButtom.Image = Resources.potion_clear; break;
                 case 6: randButtom.Image = Resources.boss_clear; break;
             }
@@ -641,7 +647,7 @@ namespace winform_clear_project
         {
             if (linkLabel1.Left < this.Width)
             {
-                linkLabel1.Left += 5;
+                linkLabel1.Left += 2;
             }
             else
             {

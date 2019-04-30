@@ -129,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon-rpg.ico" />
+    <None Include="Resources\potion_pickup.wav" />
     <None Include="Resources\key.png" />
     <None Include="Resources\hero_sprite_with_sword.png" />
     <None Include="Resources\chest_close.png" />
