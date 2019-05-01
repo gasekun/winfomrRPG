@@ -10,6 +10,7 @@ namespace rpg_from_java_by_Gase
         public int y = 0;
         public int room = 0;
         public bool key = false;
+        public int coin = 0;
     }
     public class Test
     {
@@ -23,7 +24,7 @@ namespace rpg_from_java_by_Gase
         }
         public bool walk_down(int x, int y, char[,] room)
         {
-            if (x + 1 > Math.Sqrt(room.Length) || x == Math.Sqrt(room.Length))
+            if (x + 1 >=Math.Sqrt(room.Length))
                 return false;
             if (room[x + 1, y] == '-' || room[x + 1, y] == '|' || room[x + 1, y] == 'С' || room[x + 1, y] == '+')
                 return false;
@@ -31,7 +32,7 @@ namespace rpg_from_java_by_Gase
         }
         public bool walk_right(int x, int y, char[,] room)
         {
-            if (y + 1 > Math.Sqrt(room.Length) || y == Math.Sqrt(room.Length))
+            if (y + 1 >=Math.Sqrt(room.Length))
                 return false;
             if (room[x, y + 1] == '-' || room[x, y + 1] == '|' || room[x, y + 1] == 'С' || room[x, y + 1] == '+')
                 return false;
@@ -70,13 +71,6 @@ namespace rpg_from_java_by_Gase
                     return true;
             return false;
         }
-    }
-    interface IMonstr
-    {
-        string name { get; set; }
-        int HP_monster { get; set; }
-        int damage_monster { get; set; }
-        bool hit(int i);
     }
     public class Boss
     {
@@ -165,6 +159,23 @@ namespace rpg_from_java_by_Gase
             {'|',' ',' ',' ',' ',' ',' ',' ',' ','|'},
             {'|',' ',' ',' ',' ',' ',' ',' ',' ','|'},
             {'+','-','-','-','-','-','-','-','-','+'},
+        };
+        public char[,] big_room { get; } = new char[,]{
+            {'+','-','-','-','-','-','-','-','-','-','-','-','-','-','+'},
+            {'|',' ','К',' ',' ',' ','К',' ',' ',' ','К',' ',' ',' ','|'},
+            {'|',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'|',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','К','|'},
+            {'|',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'|',' ',' ',' ',' ',' ','К',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'|',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'|',' ',' ',' ',' ',' ',' ',' ',' ',' ','К',' ',' ',' ','В'},
+            {'|','К',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'|',' ',' ',' ','К',' ',' ',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'|',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'|',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'|',' ',' ',' ',' ',' ',' ','К',' ',' ',' ',' ','К',' ','|'},
+            {'|',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','|'},
+            {'+','*','-','-','-','-','-','-','-','-','-','-','-','-','+'},
         };
     }
 }
