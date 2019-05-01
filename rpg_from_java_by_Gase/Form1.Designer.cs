@@ -291,9 +291,9 @@
             this.linkLabel1.LinkColor = System.Drawing.Color.Black;
             this.linkLabel1.Location = new System.Drawing.Point(8, 202);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(249, 13);
+            this.linkLabel1.Size = new System.Drawing.Size(175, 13);
             this.linkLabel1.TabIndex = 5;
-            this.linkLabel1.Text = "Версия 0.0.0.2. Добавлено разрушение блоков.";
+            this.linkLabel1.Text = "Версия 0.0.0.3. ОПТИМИЗАЦИЯ.";
             // 
             // progressBar1
             // 

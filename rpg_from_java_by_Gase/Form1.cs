@@ -3,7 +3,6 @@ using rpg_from_java_by_Gase.Properties;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Media;
 using System.Windows.Forms;
 
@@ -24,12 +23,14 @@ namespace winform_clear_project
         Rooms rooms;
         Label[] blocks = new Label[100];
         LinkLabel randButtom;
+        SoundPlayer player1 = new SoundPlayer();
+        SoundPlayer player2 = new SoundPlayer();
+        SoundPlayer player3 = new SoundPlayer();
+        SoundPlayer player4 = new SoundPlayer();
         int type_monstr = 0;
         bool in_fight = false;
         bool play = false;
         int buf_x = 0, buf_y = 0;//разрушение стены
-        SoundPlayer player1 = new SoundPlayer();
-        SoundPlayer player2 = new SoundPlayer();
         int count_play = 0;
         #endregion objects
         #region form events
@@ -58,6 +59,10 @@ namespace winform_clear_project
             listimage_main.Add(Resources.boss);//4
             listimage_main.Add(Resources.potion);//5
             listimage_main.Add(Resources.door);//6
+            player1.Stream = Resources.background_music;
+            player2.Stream = Resources.music_fight;
+            player3.Stream = Resources.game_over;
+            player4.Stream = Resources.win_sound;
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -192,8 +197,7 @@ namespace winform_clear_project
 
         private void win()
         {
-            player1.Stream = Resources.win_sound;
-            player1.Play();
+            player4.Play();
             listimage_main[0] = Resources.hero_sprite;
             MessageBox.Show("Победа!", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             tabControl1.TabPages.Remove(tabPage1);
@@ -336,13 +340,11 @@ namespace winform_clear_project
             obj_hero.streng += 1;
             in_fight = false;
             toolStripStatusLabel1.Text = "HP:" + obj_hero.health + ",урон:" + obj_hero.streng * 2 + ",зелий:" + obj_hero.pointions;
-            player1.Stream = Resources.background_music;
             player1.Play();
         }
         private void game_end()
         {
-            player1.Stream = Resources.game_over;
-            player1.Play();
+            player3.Play();
             listimage_main[0] = Resources.hero_sprite;
             MessageBox.Show("GAME OVER!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             tabControl1.TabPages.Remove(tabPage2);
@@ -506,9 +508,7 @@ namespace winform_clear_project
             type_monstr = 2;
             label6.Image = Resources.boss;
             label6.Location = new Point((tabPage1.Size.Width / 2) - label6.Size.Width / 2, label6.Location.Y);
-            player1.Stop();
-            player1.Stream =Resources.music_fight;
-            player1.Play();
+            player2.Play();
         }
 
         private void start_fight_skeleton()
@@ -521,9 +521,7 @@ namespace winform_clear_project
             tabControl1.TabPages.Add(tabPage2);
             in_fight = true;
             type_monstr = 1;
-            player1.Stop();
-            player1.Stream = Resources.music_fight;
-            player1.Play();
+            player2.Play();
         }
         #endregion my methods
         #region button and timer events
@@ -602,8 +600,7 @@ namespace winform_clear_project
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             tabControl1.TabPages.Remove(tabPage3);
             tabControl1.TabPages.Add(tabPage1);
-            player1.Stop();
-            player1.Stream = Resources.background_music;
+            toolStripStatusLabel2.Image = null;
             player1.Play();
         }
 
